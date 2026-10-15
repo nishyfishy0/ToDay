@@ -5,8 +5,11 @@
 body {
     margin: 0;
     padding: 1rem;
-    font-family: monospace;
+    font-family: Huninn, sans-serif;
+    background: #ebf9ff;
+    background: linear-gradient(135deg, rgba(235, 249, 255, 1) 0%, rgba(230, 255, 241, 1) 50%, rgba(255, 253, 235, 1) 100%);
 }
+
 
 h2 {
     padding-inline: 0.5rem;
@@ -23,9 +26,8 @@ hr {
 }
 
 .header,
-.board,
 .column {
-    font-family: monospace;
+    background-color: #fff8f5;
 }
 
 .header {
@@ -37,12 +39,28 @@ hr {
     border-radius: 15px;
     padding: 0.75rem;
     margin-bottom: 0.75rem;
+
+    span {
+        font-size: clamp(1rem, 1.5vw, 1.4rem);
+    }
+
+    p {
+        color: #333;
+        font-size: 1rem;
+    }
 }
 
-.brand h2,
+.brand span,
 .brand p {
-    padding-inline: 0.5rem;
     margin: 0;
+}
+
+#to {
+    color: #002d7d;
+}
+
+#day {
+    color: #ffd56b;
 }
 
 .newTask,
@@ -69,14 +87,15 @@ hr {
     }
 }
 
+.newTask,
 .completeTask {
+    font-family: Huninn, sans-serif;
     justify-content: center;
     align-items: center;
-    width: 40%;
+}
 
-    p {
-        margin-inline: 1rem;
-    }
+.completeTask {
+    width: 40%;
 }
 
 .task-card {
@@ -85,6 +104,7 @@ hr {
     padding: 0.25rem;
 
     span {
+        font-family: monospace;
         background-color: #b4b4b4;
         color: #505050;
         border-radius: 5px;
