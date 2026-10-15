@@ -1,0 +1,166 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 1rem;
+    font-family: monospace;
+}
+
+h2 {
+    padding-inline: 0.5rem;
+    font-size: clamp(1rem, 1.5vw, 1.4rem);
+    margin-block: 0.5rem;
+}
+
+hr {
+    border: none;
+    height: 2px;
+    background-color: #333;
+    width: 95%;
+    margin: 0 auto 1rem;
+}
+
+.header,
+.board,
+.column {
+    font-family: monospace;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border: 2px solid #333;
+    border-radius: 15px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.brand h2,
+.brand p {
+    padding-inline: 0.5rem;
+    margin: 0;
+}
+
+.newTask,
+.completeTask {
+    display: flex;
+    background-color: #f2f2f2;
+
+    border: 2px solid #333;
+    border-radius: 10px;
+}
+
+.newTask {
+    justify-content: center;
+    align-items: center;
+
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    width: 15%;
+
+    p {
+        margin: auto;
+        margin-top: 10%;
+        margin-bottom: 10%;
+    }
+}
+
+.completeTask {
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+
+    p {
+        margin-inline: 1rem;
+    }
+}
+
+.task-card {
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 0.25rem;
+
+    span {
+        background-color: #b4b4b4;
+        color: #505050;
+        border-radius: 5px;
+        padding-inline: 1%;
+    }
+}
+
+.board {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    flex: 1 1 15rem;
+    min-width: 0;
+
+    border: 2px solid #333;
+    border-radius: 15px;
+    padding: 0.75rem;
+}
+
+
+
+/* Dial */
+
+.dial {
+    width: 200px;
+    height: 200px;
+    border: 5px solid #b4b4b4;
+    border-radius: 50%;
+    background: #f2f2f2;
+    transform: translate(50%);
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inner-dial {
+    width: 150px;
+    height: 150px;
+    border: 5px solid #b4b4b4;
+    border-radius: 50%;
+    background: #e0e0e0;
+
+    position: relative;
+}
+
+#pointer {
+    width: 4px;
+    height: 85px;
+    background: #333;
+    border-radius: 4px;
+
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    width: 50%;
+    height: 4px;
+
+    transform-origin: left center;
+    transform: rotate(0deg);
+}
+
+#time {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: monospace;
+
+    color: #333;
+    top: 50%;
+    padding-left: 21.5%;
+}
