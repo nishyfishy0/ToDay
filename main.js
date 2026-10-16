@@ -4,12 +4,20 @@ const completedColumn = document.querySelectorAll('.column')[2]; // Selects the 
 
 
 function complete(event) {
-    const task = event.target.closest(".task-card");
+    const btn = event.target;
+    const task = btn.closest(".task-card");
 
-    if (event.target)
-    completedColumn.appendChild(task.querySelector("span"));
-    
-    task.remove();
+    if (btn.textContent === "") {
+        const inp = task.querySelector("input");
+
+        if (inp.classList.contains(inp.value.toLowerCase())) {
+            completedColumn.appendChild(task.querySelector("span"));
+            task.remove();
+        }
+    } else {
+        completedColumn.appendChild(task.querySelector("span"));
+        task.remove();
+    }
 }
 
 
@@ -43,17 +51,26 @@ function createTask(id, title, desc, btn, txt, reqInp) {
         const submit = document.createElement("button");
 
         inp.placeholder = txt;
-        submit.textContent = "Submit";
+        submit.textContent = "";
+        inp.classList.add(reqInp.toLowerCase());
         submit.classList.add("completeTask");
-        submit.classList.add(reqInp);
+        submit.style.backgroundColor = "#f2f2f2";
+        submit.style.border = "0px";
 
         task.append(inp, submit);
+
+        inp.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                submit.click();
+            }
+        });
     }
 
     todoColumn.append(task)
     
     const completionReq = task.querySelector(".completeTask");
-    completeReq.addEventListener("click", complete);
+
+    completionReq.addEventListener("click", complete);
 }
 
 
@@ -70,4 +87,4 @@ createTask(
 );
 
 createTask("t.2", "deez", "nuts", "gottem", undefined, undefined);
-createTask("t.3", "among us", "not clickbait 2026 *COPS CALLED*", undefined, "wowowow u can type here :0");
+createTask("t.3", "among us", "not clickbait 2026 *COPS CALLED*", undefined, "wowowow u can type here :0", "clickbait");
