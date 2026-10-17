@@ -6,17 +6,32 @@ const completedColumn = document.querySelectorAll('.column')[2]; // Selects the 
 function complete(event) {
     const btn = event.target;
     const task = btn.closest(".task-card");
+    const taskID = task.dataset.taskId;
 
     if (btn.textContent === "") {
         const inp = task.querySelector("input");
 
-        if (inp.classList.contains(inp.value.toLowerCase())) {
+        if (inp.value.toLowerCase() === inp.dataset.answer) {
             completedColumn.appendChild(task.querySelector("span"));
             task.remove();
         }
     } else {
         completedColumn.appendChild(task.querySelector("span"));
         task.remove();
+
+        setTimeout(() => {
+            nextTask(taskID);
+        }, 500);
+    }
+}
+
+
+
+function nextTask(id) {
+    if (id === "t.1") {
+        createTask("t.2", "", "nuts", "gottem", undefined, undefined);
+    } else if (id === "t.2") {
+        createTask("t.3", "among us", "not clickbait 2026 *COPS CALLED*", undefined, "wowowow u can type here :0", "clickbait");
     }
 }
 
@@ -33,6 +48,7 @@ function createTask(id, title, desc, btn, txt, reqInp) {
     description.textContent = desc;
     
     task.classList.add("task-card");
+    task.dataset.taskId = id;
     task.append(ident, head, description);
     
 
@@ -52,7 +68,7 @@ function createTask(id, title, desc, btn, txt, reqInp) {
 
         inp.placeholder = txt;
         submit.textContent = "";
-        inp.classList.add(reqInp.toLowerCase());
+        inp.dataset.answer = reqInp.toLowerCase();
         submit.classList.add("completeTask");
         submit.style.backgroundColor = "#f2f2f2";
         submit.style.border = "0px";
@@ -85,6 +101,3 @@ createTask(
     undefined,
     undefined
 );
-
-createTask("t.2", "deez", "nuts", "gottem", undefined, undefined);
-createTask("t.3", "among us", "not clickbait 2026 *COPS CALLED*", undefined, "wowowow u can type here :0", "clickbait");
