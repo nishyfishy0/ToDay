@@ -3,10 +3,10 @@
 }
 
 body {
+    min-height: 100vh;
     margin: 0;
     padding: 1rem;
     font-family: Huninn, sans-serif;
-    background: #ebf9ff;
     background: linear-gradient(135deg, rgba(235, 249, 255, 1) 0%, rgba(230, 255, 241, 1) 50%, rgba(255, 253, 235, 1) 100%);
 }
 
@@ -137,7 +137,9 @@ span {
 
 
 
-/* Dial */
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Dial ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+
 
 .dial {
     width: 200px;
@@ -145,7 +147,11 @@ span {
     border: 5px solid #b4b4b4;
     border-radius: 50%;
     background: #f2f2f2;
-    transform: translate(50%);
+    
+    position: fixed;
+    bottom: 20px; 
+    right: 20px;
+    z-index: 999; 
     
     display: flex;
     justify-content: center;
@@ -170,7 +176,7 @@ span {
 
     position: absolute;
     left: 50%;
-    top: 55%;
+    top: 50%; 
     width: 50%;
     height: 4px;
 
@@ -184,6 +190,9 @@ span {
     font-family: monospace;
 
     color: #333;
-    top: 50%;
-    padding-left: 21.5%;
+    position: absolute;
+
+    transform-origin: left center;
+    left: 32.75%;
+    top: -35%;
 }

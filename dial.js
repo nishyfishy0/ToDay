@@ -48,7 +48,7 @@ dial.addEventListener("pointerdown", (initPos) => {
 });
 
 function onPointerMove(mousePos) {
-    const deltaX = mousePos.clientX - initX;
+    const deltaX = Math.abs(mousePos.clientX - initX);
     cranksfx.play();
 
     const newDuration = Math.max(
