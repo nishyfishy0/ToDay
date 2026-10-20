@@ -143,11 +143,22 @@ function createTask(id, title, desc, btn, reqClicks, txt, reqInp) {
     completionReq.addEventListener("click", complete);
 }
 
-createTask(
-    "0.1",
-    "What's 1 + 1?",
-    "Easy question. Hopefully.",
-    undefined, undefined,
-    "Type your answer here...",
-    "2"
-);
+function startGame() {
+    createTask(
+        "0.1",
+        "What's 1 + 1?",
+        "Easy question. Hopefully.",
+        undefined, undefined,
+        "Type your answer here...",
+        "2"
+    );
+}
+
+
+
+
+
+document.addEventListener("bombModeStart", () => {
+    alert("prank'd lmao this isn't a productivity website 😛😛😛")
+    startGame();
+});

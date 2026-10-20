@@ -66,6 +66,8 @@ function nextTask(id) {
             "Type your password...",
             "bombMODE!"
         );
+    } else {
+        document.dispatchEvent(new Event("bombModeStart"));
     }
 }
 
