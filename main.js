@@ -159,6 +159,6 @@ function startGame() {
 
 
 document.addEventListener("bombModeStart", () => {
-    alert("prank'd")
+    alert("prank'd lmao this isn't a productivity website 😛😛😛")
     startGame();
 });
