@@ -4,6 +4,7 @@ const newTask = document.querySelector('.newTask');
 
 let score = 0;
 let gameLoop = true;
+let currentTaskID = 0.1;
 let maxTasks = 5;
 let scoreText = null;
 let wordSet = new Set();
@@ -318,7 +319,27 @@ function generateWordBombTask() {
     };
 }
 
+function chooseRandomTask() {
+    let chosenTask = taskPool[Math.floor(Math.random() * taskPool.length)];
+
+    if (typeof chosenTask === function) {
+        chosenTask = chosenTask();
+
+        createTask(
+            String(currentTaskID),
+            chosenTask.title,
+            chosenTask.desc,
+            chosenTask.type,
+            undefined, undefined,
+            chosenTask.placeholder,
+            Object.hasOwn(chosenTask, "answer") ? chosenTask.answer : undefined,
+            Object.hasOwn(chosenTask, "answer") ? undefined : chosenTask
+        )
+    }
+}
+
 function startGame() {
+
     createTask(
         "0.1",
         "What's 1 + 1?",
