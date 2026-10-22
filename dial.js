@@ -7,18 +7,19 @@ cranksfx.volume = 0.75;
 
 
 let initDuration = 0;
+let vignetteOpacity = 0;
 let duration = 30_000;
 let maxTime = 60_000;
 let endTime = Date.now() + duration;
 let initEndTime = 0;
 let remainingTime = 0;
+let gameEnded = false;
 let initX = 0;
 
 
 function updateTimer() {
     remainingTime = Math.max(0, ((endTime - Date.now()) / 1000));
 
-    console.log(remainingTime);
     timerText.textContent = remainingTime.toFixed(2).padStart(5, '0');
 
 
@@ -27,6 +28,11 @@ function updateTimer() {
 
     const degrees = -(angle * 180 / Math.PI);
     pointer.style.transform = `rotate(${degrees}deg)`;
+    
+    if (remainingTime === 0 && !gameEnded) {
+        gameEnded = true;
+        document.dispatchEvent(new Event("endGame"));
+    }
 }
 
 
@@ -45,6 +51,8 @@ dial.addEventListener("pointerdown", (initPos) => {
     dial.setPointerCapture(initPos.pointerId);
     dial.addEventListener('pointermove', onPointerMove);
     dial.addEventListener('pointerup', onPointerUp);
+
+    document.dispatchEvent(new Event("dialTurned"));
 });
 
 function onPointerMove(mousePos) {
