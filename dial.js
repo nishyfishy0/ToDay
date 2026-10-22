@@ -7,6 +7,7 @@ cranksfx.volume = 0.75;
 
 
 let initDuration = 0;
+let timerLocked = false;
 let vignetteOpacity = 0;
 let duration = 30_000;
 let maxTime = 60_000;
@@ -42,17 +43,19 @@ setInterval(updateTimer, 100);
 
 
 dial.addEventListener("pointerdown", (initPos) => {
-    initX = initPos.clientX;    //  Here we're setting the initial X
-    // clientX is the current mouse cursor X position
-
-    initEndTime = endTime;
-    initDuration = endTime - Date.now();
+    if (!timerLocked) {
+        initX = initPos.clientX;    //  Here we're setting the initial X
+        // clientX is the current mouse cursor X position
     
-    dial.setPointerCapture(initPos.pointerId);
-    dial.addEventListener('pointermove', onPointerMove);
-    dial.addEventListener('pointerup', onPointerUp);
-
-    document.dispatchEvent(new Event("dialTurned"));
+        initEndTime = endTime;
+        initDuration = endTime - Date.now();
+        
+        dial.setPointerCapture(initPos.pointerId);
+        dial.addEventListener('pointermove', onPointerMove);
+        dial.addEventListener('pointerup', onPointerUp);
+    
+        document.dispatchEvent(new Event("dialTurned"));
+    }
 });
 
 function onPointerMove(mousePos) {
@@ -73,3 +76,18 @@ function onPointerUp(mousePos) {
     dial.removeEventListener('pointermove', onPointerMove);
     dial.removeEventListener('pointerup', onPointerUp);
 };
+
+
+
+document.addEventListener("lockTimer", () => {
+    timerLocked = true;
+});
+
+document.addEventListener("unlockTimer", () => {
+    timerLocked = false;
+});
+
+document.addEventListener("bombModeStart", () => {
+    endTime = Date.now() + 30_000;
+    gameEnded = false;
+});
