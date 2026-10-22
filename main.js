@@ -6,6 +6,7 @@ const body = document.querySelector("body");
 
 let score = 0;
 let timerLocked = false;
+let username = `user${Math.floor(Math.random() * (9999999 - 1000000 + 1)) + 1000000}`;
 let gameLoop = true;
 let timesTurned = 0;
 let currentTaskNum = 0;
@@ -102,11 +103,18 @@ let taskPool = [
     // Sequential tasks end
 
     {
-        title: "TEST",
-        desc: "TESTTESTTESTTESTTESTTEST",
+        title: "tebahplA",
+        desc: "Type the English alphabet. From Z to A. Without spaces.",
         type: "input",
-        answer: "TEST",
-        placeholder: "Type \"TEST\" here...",
+        answer: "ZYXWVUTSRQPONMLKJIHGFEDCBA",
+        placeholder: "Type an answer..."
+    },
+    {
+        title: "Authorize your account.",
+        desc: `Something went wrong. To continue spinning the dial, enter your username: ${username}`,
+        type: "input",
+        answer: `${username}`,
+        placeholder: "Authorize here...",
         timerLock: true
     },
     {
@@ -272,7 +280,7 @@ function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, time
     }
 
     task.dataset.timerLock = timerLock;
-
+    
     if (timerLock === true) {
         document.dispatchEvent(new Event("lockTimer"));
         timerLocked = true;
