@@ -1,9 +1,11 @@
 const todoColumn = document.querySelectorAll('.column')[0]; 
+const lockColumn = document.querySelectorAll('.column')[1]; 
 const completedColumn = document.querySelectorAll('.column')[2]; 
 const newTask = document.querySelector('.newTask');
 const body = document.querySelector("body");
 
 let score = 0;
+let timerLocked = false;
 let gameLoop = true;
 let timesTurned = 0;
 let currentTaskNum = 0;
@@ -97,6 +99,24 @@ let taskPool = [
         answer: "Yes",
         placeholder: "Type \"yes\" here..."
     },
+    // Sequential tasks end
+
+    {
+        title: "TEST",
+        desc: "TESTTESTTESTTESTTESTTEST",
+        type: "input",
+        answer: "TEST",
+        placeholder: "Type \"TEST\" here...",
+        timerLock: true
+    },
+    {
+        title: "TEST",
+        desc: "TESTTESTTESTTESTTESTTEST",
+        type: "button",
+        buttonText: "TEST",
+        requiredClicks: 3,
+        timerLock: true
+    },
     generateAdditionTask,
     generateMultiplicationTask,
     generateRandomWordTask,
@@ -119,7 +139,7 @@ function complete(event) {
 
     if (btn.textContent === "") {
         const inp = task.querySelector("input");
-
+    
         if (!("answer" in inp.dataset)) {
             const isCorrect = inp.validate
                 ? inp.validate(inp.value.trim())
@@ -127,6 +147,10 @@ function complete(event) {
 
             if (isCorrect) {
                 completedColumn.appendChild(task.querySelector("span"));
+                if (task.dataset.timerLock === "true") {
+                    document.dispatchEvent(new Event("unlockTimer"));
+                    timerLocked = false;
+                }
                 task.remove();
 
                 setTimeout(() => {
@@ -141,6 +165,10 @@ function complete(event) {
             }
         } else if (inp.value.toLowerCase() === inp.dataset.answer) {
             completedColumn.appendChild(task.querySelector("span"));
+            if (task.dataset.timerLock === "true") {
+                document.dispatchEvent(new Event("unlockTimer"));
+                timerLocked = false;
+            }
             task.remove();
 
             setTimeout(() => {
@@ -158,6 +186,10 @@ function complete(event) {
 
         if (requiredClicks <= 1) {
             completedColumn.appendChild(task.querySelector("span"));
+            if (task.dataset.timerLock === "true") {
+                document.dispatchEvent(new Event("unlockTimer"));
+                timerLocked = false;
+            }
             task.remove();
 
             setTimeout(() => {
@@ -180,12 +212,10 @@ function complete(event) {
 function nextTask() {
     if (gameLoop) {
         chooseRandomTask();
-    } else {
-        alert(`Game Over.\nYou completed ${totalTaskNum} task${totalTaskNum === 1 ? "" : "s"} and spun the dial ${timesTurned} time${timesTurned === 1 ? "" : "s"}.\nYour total score is ${score}.`)
     }
 }
 
-function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData) {
+function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, timerLock) {
     const task = document.createElement("div");
     const ident = document.createElement("span");
     const head = document.createElement("h3");
@@ -241,7 +271,18 @@ function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData) {
         });
     }
 
-    todoColumn.append(task);
+    task.dataset.timerLock = timerLock;
+
+    if (timerLock === true) {
+        document.dispatchEvent(new Event("lockTimer"));
+        timerLocked = true;
+    }
+
+    if (!(timerLock === true)) {
+        todoColumn.append(task);
+    } else {
+        lockColumn.append(task)
+    }
     
     const completionReq = task.querySelector(".completeTask");
     completionReq.addEventListener("click", complete);
@@ -335,7 +376,8 @@ function chooseRandomTask() {
         chosenTask.requiredClicks,
         chosenTask.placeholder,
         chosenTask.answer,
-        chosenTask.validate ? chosenTask : undefined
+        chosenTask.validate ? chosenTask : undefined,
+        chosenTask.timerLock
     )
 }
 
@@ -363,4 +405,12 @@ document.addEventListener("dialTurned", () => {
 
 document.addEventListener("endGame", () => {
     gameLoop = false;
+    alert(`Game Over.\nYou completed ${totalTaskNum} task${totalTaskNum === 1 ? "" : "s"} and spun the dial ${timesTurned} time${timesTurned === 1 ? "" : "s"}.\nYour total score is ${score}.`)
+    
+    while (todoColumn.firstChild) {
+        todoColumn.removeChild(todoColumn.lastChild);
+    }
+    while (lockColumn.firstChild) {
+        lockColumn.removeChild(lockColumn.lastChild);
+    }
 });
