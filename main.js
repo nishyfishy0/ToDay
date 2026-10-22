@@ -1,10 +1,14 @@
 const todoColumn = document.querySelectorAll('.column')[0]; 
 const completedColumn = document.querySelectorAll('.column')[2]; 
 const newTask = document.querySelector('.newTask');
+const body = document.querySelector("body");
 
 let score = 0;
 let gameLoop = true;
-let currentTaskID = 0.1;
+let timesTurned = 0;
+let currentTaskNum = 0;
+let totalTaskNum = 0;
+let prevTaskInd = {};
 let maxTasks = 5;
 let scoreText = null;
 let wordSet = new Set();
@@ -112,7 +116,6 @@ if (scoreText) {
 function complete(event) {
     const btn = event.currentTarget;
     const task = btn.closest(".task-card");
-    const taskID = task.dataset.taskId;
 
     if (btn.textContent === "") {
         const inp = task.querySelector("input");
@@ -127,10 +130,11 @@ function complete(event) {
                 task.remove();
 
                 setTimeout(() => {
-                    nextTask(taskID); 
-                }, 500);
+                    nextTask(); 
+                }, 1000);
 
                 score += 100;
+                totalTaskNum++;
                 if (scoreText) {
                     scoreText.textContent = `Score: ${score}`
                 };
@@ -140,10 +144,11 @@ function complete(event) {
             task.remove();
 
             setTimeout(() => {
-                nextTask(taskID); 
-            }, 500);
+                nextTask(); 
+            }, 1000);
 
             score += 100;
+            totalTaskNum++;
             if (scoreText) {
                 scoreText.textContent = `Score: ${score}`
             };
@@ -156,11 +161,14 @@ function complete(event) {
             task.remove();
 
             setTimeout(() => {
-                nextTask(taskID);
-            }, 500);
+                nextTask();
+            }, 1000);
 
             score += 100;
-            if (scoreText) scoreText.textContent = `Score: ${score}`;
+            totalTaskNum++;
+            if (scoreText) {
+                scoreText.textContent = `Score: ${score}`;
+            }
         } else {
             const btntext = btn.querySelector("p");
             btn.dataset.requiredClicks = requiredClicks - 1;
@@ -169,34 +177,11 @@ function complete(event) {
     }
 }
 
-function nextTask(id) {
-    if (id === "0.1") {
-        createTask(
-            "0.2",
-            "What color is a carrot?",
-            "I think it's a... I think it's a carrot... uhhh... carrots... idk abt that....",
-            undefined, undefined,
-            "Type a color...",
-            "Orange"
-        );
-    } else if (id === "0.2") {
-        createTask(
-            "0.3",
-            "Click!",
-            "Click the button 10 times.",
-            "Click! Click! Click!",
-            10,
-            undefined, undefined
-        );
-    } else if (id === "0.3") {
-        createTask(
-            "0.4",
-            "What's 14 x 2?",
-            "Oooh bit of a harder one but no biggie... right...?",
-            undefined, undefined,
-            "Type a number...",
-            "28"
-        );
+function nextTask() {
+    if (gameLoop) {
+        chooseRandomTask();
+    } else {
+        alert(`Game Over.\nYou completed ${totalTaskNum} task${totalTaskNum === 1 ? "" : "s"} and spun the dial ${timesTurned} time${timesTurned === 1 ? "" : "s"}.\nYour total score is ${score}.`)
     }
 }
 
@@ -320,34 +305,44 @@ function generateWordBombTask() {
 }
 
 function chooseRandomTask() {
-    let chosenTask = taskPool[Math.floor(Math.random() * taskPool.length)];
-
-    if (typeof chosenTask === function) {
-        chosenTask = chosenTask();
-
-        createTask(
-            String(currentTaskID),
-            chosenTask.title,
-            chosenTask.desc,
-            chosenTask.type,
-            undefined, undefined,
-            chosenTask.placeholder,
-            Object.hasOwn(chosenTask, "answer") ? chosenTask.answer : undefined,
-            Object.hasOwn(chosenTask, "answer") ? undefined : chosenTask
-        )
+    let randInd = Math.floor(Math.random() * taskPool.length)
+    let chosenTask = -1;
+    
+    if (prevTaskInd === 5) {
+        randInd = 6;
+    } else if (prevTaskInd === 6) {
+        randInd = 7;
+    } else if (randInd === 6 || randInd === 7) {
+        while (randInd === 6 || randInd === 7) {
+            randInd = Math.floor(Math.random() * taskPool.length);
+        }
     }
+   
+    chosenTask = taskPool[randInd];
+    prevTaskInd = randInd;
+
+    if (typeof chosenTask === "function") {
+        chosenTask = chosenTask();
+    }
+    
+    currentTaskNum++; 
+
+    createTask(
+        `${timesTurned}.${currentTaskNum}`,
+        chosenTask.title,
+        chosenTask.desc,
+        chosenTask.buttonText,
+        chosenTask.requiredClicks,
+        chosenTask.placeholder,
+        chosenTask.answer,
+        chosenTask.validate ? chosenTask : undefined
+    )
 }
 
 function startGame() {
-
-    createTask(
-        "0.1",
-        "What's 1 + 1?",
-        "Easy question. Hopefully.",
-        undefined, undefined,
-        "Type your answer here...",
-        "2"
-    );
+    document.body.style.background = "linear-gradient(90deg,rgba(237, 109, 109, 1) 0%, rgba(237, 161, 126, 1) 50%, rgba(247, 205, 114, 1) 100%)";
+    for (let i = 0; i <= maxTasks; i++)
+        chooseRandomTask();
 }
 
 
@@ -355,6 +350,17 @@ function startGame() {
 
 
 document.addEventListener("bombModeStart", () => {
+    document.body.classList.add("bomb-mode");
     alert("prank'd lmao this isn't a productivity website 😛😛😛")
     startGame();
+});
+
+document.addEventListener("dialTurned", () => {
+    timesTurned++;
+    currentTaskNum = 0;
+    score -= 50;
+});
+
+document.addEventListener("endGame", () => {
+    gameLoop = false;
 });
