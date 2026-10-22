@@ -11,6 +11,7 @@ body {
 }
 
 
+
 h2 {
     padding-inline: 0.5rem;
     font-size: clamp(1rem, 1.5vw, 1.4rem);
