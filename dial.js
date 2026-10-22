@@ -16,12 +16,13 @@ let initEndTime = 0;
 let remainingTime = 0;
 let gameEnded = false;
 let initX = 0;
+let textStatus = "";
 
 
 function updateTimer() {
     remainingTime = Math.max(0, ((endTime - Date.now()) / 1000));
 
-    timerText.textContent = remainingTime.toFixed(2).padStart(5, '0');
+    timerText.textContent = `${remainingTime.toFixed(2).padStart(5, '0')} ${textStatus}`;
 
 
     const selectedTime = Math.max(0, endTime - Date.now());
@@ -81,10 +82,12 @@ function onPointerUp(mousePos) {
 
 document.addEventListener("lockTimer", () => {
     timerLocked = true;
+    textStatus = "🔒";
 });
 
 document.addEventListener("unlockTimer", () => {
     timerLocked = false;
+    textStatus = "";
 });
 
 document.addEventListener("bombModeStart", () => {
