@@ -10,6 +10,19 @@ body {
     background: linear-gradient(135deg, rgba(235, 249, 255, 1) 0%, rgba(230, 255, 241, 1) 50%, rgba(255, 253, 235, 1) 100%);
 }
 
+body.bomb-mode::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 40%,
+        rgba(180, 0, 0, var(--vignette-opacity, 0))
+    );
+}
+
 
 
 h2 {
