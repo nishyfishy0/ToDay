@@ -402,6 +402,7 @@ function startGame() {
 document.addEventListener("bombModeStart", () => {
     document.body.classList.add("bomb-mode");
     alert("prank'd lmao this isn't a productivity website 😛😛😛")
+    document.body.classList.add("bomb-mode");
     startGame();
 });
 
