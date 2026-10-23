@@ -366,6 +366,12 @@ function chooseRandomTask() {
             randInd = Math.floor(Math.random() * taskPool.length);
         }
     }
+
+    if (taskPool[prevTaskInd]?.timerLock === true) {
+        while (taskPool[randInd]?.timerLock === true) {
+            randInd = Math.floor(Math.random() * taskPool.length);
+        }
+    }
    
     chosenTask = taskPool[randInd];
     prevTaskInd = randInd;
@@ -401,11 +407,8 @@ function startGame() {
 
 document.addEventListener("bombModeStart", () => {
     document.body.classList.add("bomb-mode");
-    alert(`Welcome to Bomb Mode.
-    The timer is now lethal.
-    Finish as many tasks as you can before running out of time.
-    Or, turn the dial, but lost points as you do so.`)
-    timesTurned = 0;
+    alert("prank'd lmao this isn't a productivity website 😛😛😛")
+    document.body.classList.add("bomb-mode");
     startGame();
 });
 
