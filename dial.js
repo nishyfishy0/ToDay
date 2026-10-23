@@ -2,13 +2,13 @@ const timerText = document.getElementById('time');
 const dial = document.getElementById('dial');
 const pointer = document.getElementById('pointer');
 const cranksfx = new Audio("crank-tick.mp3") 
+
 cranksfx.volume = 0.75;
 
 
 
 let initDuration = 0;
 let timerLocked = false;
-let vignetteOpacity = 0;
 let duration = 30_000;
 let maxTime = 60_000;
 let endTime = Date.now() + duration;
@@ -17,11 +17,16 @@ let remainingTime = 0;
 let gameEnded = false;
 let initX = 0;
 let textStatus = "";
+let vignetteOpacity = 0;
 
 
 function updateTimer() {
     remainingTime = Math.max(0, ((endTime - Date.now()) / 1000));
 
+    const progress = 1 - (remainingTime / 60);
+    vignetteOpacity = Math.pow(progress, 3) * 0.65;
+    document.body.style.setProperty("--vignette-opacity", vignetteOpacity);
+                                    
     timerText.textContent = `${remainingTime.toFixed(2).padStart(5, '0')} ${textStatus}`;
 
 
@@ -91,6 +96,8 @@ document.addEventListener("unlockTimer", () => {
 });
 
 document.addEventListener("bombModeStart", () => {
-    endTime = Date.now() + 30_000;
+    vignetteOpacity = 0;
+    document.body.style.setProperty("--vignette-opacity", 0);
+    endTime = Date.now() + 60_000;
     gameEnded = false;
 });
