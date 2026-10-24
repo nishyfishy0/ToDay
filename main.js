@@ -433,11 +433,18 @@ document.addEventListener("endGame", () => {
     finalScoreText.textContent = `Your final score is ${score} points.`
     finalStatsText.textContent = (`You completed ${totalTaskNum} task${totalTaskNum === 1 ? "" : "s"} and spun the dial ${timesTurned} time${timesTurned === 1 ? "" : "s"}.`)
     
-    while (todoColumn.firstChild) {
-        todoColumn.removeChild(todoColumn.lastChild);
+    while (
+        todoColumn.lastElementChild &&
+        todoColumn.lastElementChild.tagName !== "HR"
+    ) {
+        todoColumn.removeChild(todoColumn.lastElementChild);
     }
-    while (lockColumn.firstChild) {
-        lockColumn.removeChild(lockColumn.lastChild);
+
+    while (
+        lockColumn.lastElementChild &&
+        lockColumn.lastElementChild.tagName !== "HR"
+    ) {
+        lockColumn.removeChild(lockColumn.lastElementChild);
     }
 });
 
