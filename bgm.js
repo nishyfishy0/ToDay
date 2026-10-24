@@ -1,7 +1,7 @@
 const am4 = new Audio('music/am 4_00.mp3');
 const balcony = new Audio('music/Balcony.mp3');
 const daylight_over = new Audio('music/Daylight Over.mp3');
-const downtown = new Audio('music/downtown.mp3');
+const downtown = new Audio('music/Downtown.mp3');
 const explosionsfx = new Audio("explosion.mp3")
 
 const bgmSongs = [am4, balcony, daylight_over, downtown];
