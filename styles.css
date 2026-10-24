@@ -23,6 +23,47 @@ body.bomb-mode::after {
     );
 }
 
+footer {
+    color:rgba(0, 0, 0, 0.1);
+    text-align: right;
+    width: 100%;
+}
+
+.hidden {
+    display: none !important; 
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background: rgba(37, 41, 56, 0.9);
+    
+    max-width: 75vh;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    
+    color: #ffffff;
+
+    button {
+        font-family: Huninn, sans-serif;
+        border-radius: 15px;
+        padding-block: 2%;
+        padding-inline: 2%;
+        border: 0px;
+    }
+}
+
 
 
 h2 {
