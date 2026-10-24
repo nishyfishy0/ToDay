@@ -98,6 +98,6 @@ document.addEventListener("unlockTimer", () => {
 document.addEventListener("bombModeStart", () => {
     vignetteOpacity = 0;
     document.body.style.setProperty("--vignette-opacity", 0);
-    endTime = Date.now() + 10_000;
+    endTime = Date.now() + 60_000;
     gameEnded = false;
 });
