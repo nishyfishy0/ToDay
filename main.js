@@ -417,6 +417,7 @@ document.addEventListener("bombModeStart", () => {
     Finish as many tasks as you can before running out of time.
     Or, turn the dial, but lost points as you do so.`);
     timesTurned = 0;
+    score = 0;
     startGame();
 });
 
