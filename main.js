@@ -3,6 +3,10 @@ const lockColumn = document.querySelectorAll('.column')[1];
 const completedColumn = document.querySelectorAll('.column')[2]; 
 const newTask = document.querySelector('.newTask');
 const body = document.querySelector("body");
+const modal = document.querySelector(".modal");
+const finalScoreText = document.getElementById("finalScore");
+const finalStatsText = document.getElementById("finalStats");
+const restartButton = document.getElementById("restartButton");
 
 let score = 0;
 let timerLocked = false;
@@ -407,6 +411,7 @@ function startGame() {
 
 document.addEventListener("bombModeStart", () => {
     document.body.classList.add("bomb-mode");
+    modal.classList.add("hidden");
     alert(`Welcome to Bomb Mode.
     The timer is now lethal.
     Finish as many tasks as you can before running out of time.
@@ -423,7 +428,9 @@ document.addEventListener("dialTurned", () => {
 
 document.addEventListener("endGame", () => {
     gameLoop = false;
-    alert(`Game Over.\nYou completed ${totalTaskNum} task${totalTaskNum === 1 ? "" : "s"} and spun the dial ${timesTurned} time${timesTurned === 1 ? "" : "s"}.\nYour total score is ${score}.`)
+    modal.classList.remove("hidden");
+    finalScoreText.textContent = `Your final score is ${score} points.`
+    finalStatsText.textContent = (`You completed ${totalTaskNum} task${totalTaskNum === 1 ? "" : "s"} and spun the dial ${timesTurned} time${timesTurned === 1 ? "" : "s"}.`)
     
     while (todoColumn.firstChild) {
         todoColumn.removeChild(todoColumn.lastChild);
@@ -431,4 +438,20 @@ document.addEventListener("endGame", () => {
     while (lockColumn.firstChild) {
         lockColumn.removeChild(lockColumn.lastChild);
     }
+});
+
+
+restartButton.addEventListener("click", () => {
+    score = 0;
+    timesTurned = 0;
+    currentTaskNum = 0;
+    totalTaskNum = 0;
+    prevTaskInd = {};
+    gameLoop = true;
+
+    if (scoreText) {
+        scoreText.textContent = `Score: ${score}`;
+    }
+
+    document.dispatchEvent(new Event("bombModeStart"));
 });
