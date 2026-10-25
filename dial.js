@@ -14,7 +14,7 @@ let maxTime = 60_000;
 let endTime = Date.now() + duration;
 let initEndTime = 0;
 let remainingTime = 0;
-let gameEnded = false;
+let gameEnded = true;
 let initX = 0;
 let textStatus = "";
 let vignetteOpacity = 0;
@@ -98,6 +98,6 @@ document.addEventListener("unlockTimer", () => {
 document.addEventListener("bombModeStart", () => {
     vignetteOpacity = 0;
     document.body.style.setProperty("--vignette-opacity", 0);
-    endTime = Date.now() + 60000;
+    endTime = Date.now() + 60_000;
     gameEnded = false;
 });
