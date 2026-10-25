@@ -1,5 +1,12 @@
 const todoColumn = document.querySelectorAll('.column')[0]; // Selects the FIRST element with class "column"
 const completedColumn = document.querySelectorAll('.column')[2]; // Selects the THIRD element with class "column"
+const modal2 = document.querySelector(".modal2");
+const startButton = document.getElementById("startButton");
+const lofiRain = new Audio("music/lo-fiRain.mp3")
+
+let vol = 0.5;
+lofiRain.volume = vol;
+lofiRain.play();
 
 
 
@@ -67,7 +74,20 @@ function nextTask(id) {
             "bombMODE!"
         );
     } else {
-        document.dispatchEvent(new Event("bombModeStart"));
+        modal2.classList.remove("hidden");
+        
+        const fadeInterval = setInterval(() => {
+            vol = Math.max(0, vol - 0.05);
+
+            lofiRain.volume = vol;
+
+            if (vol <= 0) {
+                clearInterval(fadeInterval);
+
+                lofiRain.pause();
+                lofiRain.currentTime = 0;
+            }
+        }, 100);
     }
 }
 
@@ -137,3 +157,10 @@ createTask(
     undefined,
     undefined
 );
+
+
+
+startButton.addEventListener("click", () => {
+    document.dispatchEvent(new Event("bombModeStart"));
+    modal2.classList.add("hidden");
+});
