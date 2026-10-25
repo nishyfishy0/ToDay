@@ -15,7 +15,7 @@ let gameLoop = true;
 let timesTurned = 0;
 let currentTaskNum = 0;
 let totalTaskNum = 0;
-let prevTaskInd = {};
+let prevTaskInd = -1;
 let maxTasks = 5;
 let scoreText = null;
 let wordSet = new Set();
@@ -74,15 +74,8 @@ let taskPool = [
         buttonText: "Complete CAPTCHA",
         requiredClicks: 15
     },
-    {
-        title: "Beta Feature?",
-        desc: "Test out our Password Generator, please. Password: x8VLPo$M",
-        type: "input",
-        answer: "x8VLPo$M",
-        placeholder: "Type the password :)"
-    },
 
-    // These next 3 tasks will have some extra code so that they always come one after another
+    // Sequential 1 : start
     {
         title: "Are you sure?",
         desc: "Click OK if you are.",
@@ -98,21 +91,14 @@ let taskPool = [
         requiredClicks: 1
     },
     {
-        title: "Final sure-ness check <:)",
+        title: "Sureness check :)",
         desc: "You can never be too sure. Please type \"yes\" if you're truly sure!",
         type: "input",
         answer: "Yes",
         placeholder: "Type \"yes\" here..."
     },
-    // Sequential tasks end
+    // Sequential 1 : end
 
-    {
-        title: "tebahplA",
-        desc: "Type the English alphabet. From Z to A. Without spaces.",
-        type: "input",
-        answer: "ZYXWVUTSRQPONMLKJIHGFEDCBA",
-        placeholder: "Type an answer..."
-    },
     {
         title: "Authorize your account.",
         desc: `Something went wrong. To continue spinning the dial, enter your username: ${username}`,
@@ -122,17 +108,48 @@ let taskPool = [
         timerLock: true
     },
     {
-        title: "TEST",
-        desc: "TESTTESTTESTTESTTESTTEST",
-        type: "button",
-        buttonText: "TEST",
-        requiredClicks: 3,
-        timerLock: true
+        title: "Shouting",
+        desc: "TYPE THE WORD \"QUIET\", PLEASE.",
+        type: "input",
+        answer: "QUIET",
+        placeholder: "Shout..."
     },
+
+    // Sequential 2 : start
+    {
+        title: "Knock Knock!",
+        desc: "Hey look, someone's at your door!",
+        type: "input",
+        answer: "Who's There?",
+        placeholder: "Type \"Who's There?\"..."
+    },
+    {
+        title: "Orange!",
+        desc: "What a weird name.",
+        type: "button",
+        buttonText: "Orange who?",
+        requiredClicks: 1
+    },
+    {
+        title: "Orange you glad I showed up?",
+        desc: "Of course I am! Now laugh. For an extended amount of time.",
+        type: "button",
+        buttonText: "Haha",
+        requiredClicks: 5
+    },
+    // Sequential 2 : end
+
     generateAdditionTask,
     generateMultiplicationTask,
     generateRandomWordTask,
-    generateWordBombTask
+    generateWordBombTask,
+    generateSubtractionTask,
+    generateReverseWordTask,
+    generateRandomClicksTask,
+    generateCodeTask,
+    generateCountLetterTask,
+    generateOddOneOutTask,
+    generateVerificationTask
 ];
 
 
@@ -143,6 +160,12 @@ maxTasks = 5;
 scoreText = newTask.querySelector("p");
 if (scoreText) {
     scoreText.textContent = `Score: ${score}`;
+}
+
+
+
+function getDifficulty() {
+    return 1 + Math.floor(totalTaskNum / 10);
 }
 
 function complete(event) {
@@ -175,7 +198,7 @@ function complete(event) {
                     scoreText.textContent = `Score: ${score}`
                 };
             }
-        } else if (inp.value.toLowerCase() === inp.dataset.answer) {
+        } else if (inp.value.trim().toLowerCase() === inp.dataset.answer) {
             completedColumn.appendChild(task.querySelector("span"));
             if (task.dataset.timerLock === "true") {
                 document.dispatchEvent(new Event("unlockTimer"));
@@ -301,8 +324,11 @@ function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, time
 }
 
 function generateAdditionTask() {
-    const a = Math.floor(Math.random() * 50) + 1;
-    const b = Math.floor(Math.random() * 50) + 1;
+    const difficulty = getDifficulty();
+    const max = Math.min(50 * difficulty, 500);
+
+    const a = Math.floor(Math.random() * max) + 1;
+    const b = Math.floor(Math.random() * max) + 1;
 
     return {
         title: `What's ${a} + ${b}?`,
@@ -357,16 +383,128 @@ function generateWordBombTask() {
     };
 }
 
+function generateSubtractionTask() {
+    const difficulty = getDifficulty();
+    const max1 = Math.min(20 * difficulty, 200);
+    const max2 = Math.min(10 * difficulty, 100);
+
+    const a = Math.floor(Math.random() * max1) + 20;
+    const b = Math.floor(Math.random() * max2) + 1;
+
+    return {
+        title: "Subtraction",
+        desc: `What is ${a} - ${b}?`,
+        type: "input",
+        answer: `${a - b}`,
+        placeholder: "Type the answer..."
+    };
+}
+
+function generateReverseWordTask() {
+    const words = ["banana", "dial", "spinner", "puzzle", "window", "rocket", "garden"];
+    const word = words[Math.floor(Math.random() * words.length)];
+    return {
+        title: "Reverse It",
+        desc: `Type "${word}" backwards.`,
+        type: "input",
+        answer: word.split("").reverse().join(""),
+        placeholder: "Type it backwards..."
+    };
+}
+
+function generateRandomClicksTask() {
+    const clicks = Math.floor(Math.random() * 15) + 5;
+    return {
+        title: "Random Clicks",
+        desc: `Click the button ${clicks} times. Blame RNG.`,
+        type: "button",
+        buttonText: "Click",
+        requiredClicks: clicks
+    };
+}
+
+function generateCodeTask() {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let code = "";
+    for (let i = 0; i < 6; i++) {
+        code += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return {
+        title: "Verification Code",
+        desc: `Enter the following code: ${code}`,
+        type: "input",
+        answer: code,
+        placeholder: "Enter the code..."
+    };
+}
+
+function generateCountLetterTask() {
+    const words = ["Mississippi", "bookkeeper", "strawberry", "banana", "balloon"];
+    const word = words[Math.floor(Math.random() * words.length)];
+    const letters = [...new Set(word.toLowerCase())];
+    const letter = letters[Math.floor(Math.random() * letters.length)];
+    const count = word.toLowerCase().split(letter).length - 1;
+
+    return {
+        title: "Letter Counter",
+        desc: `How many times does the letter "${letter}" appear in "${word}"?`,
+        type: "input",
+        answer: `${count}`,
+        placeholder: "Type a number..."
+    };
+}
+
+function generateOddOneOutTask() {
+    const sets = [
+        { items: "apple, banana, carrot, grape", answer: "carrot" },
+        { items: "dog, cat, hamster, table", answer: "table" },
+        { items: "red, blue, square, green", answer: "square" },
+        { items: "Paris, London, Tokyo, Africa", answer: "Africa" }
+    ];
+    const set = sets[Math.floor(Math.random() * sets.length)];
+    return {
+        title: "Odd One Out",
+        desc: `Which one doesn't belong? ${set.items}`,
+        type: "input",
+        answer: set.answer,
+        placeholder: "Type the odd one..."
+    };
+}
+
+function generateVerificationTask() {
+    const code = Math.floor(Math.random() * 9000) + 1000;
+    return {
+        title: "Verification",
+        desc: `Please verify your account. Use this code: ${code}`,
+        type: "input",
+        answer: `${code}`,
+        placeholder: "Type the code...",
+        timerLock: true
+    };
+}
+
 function chooseRandomTask() {
     let randInd = Math.floor(Math.random() * taskPool.length)
     let chosenTask = -1;
     
-    if (prevTaskInd === 5) {
+    // Sequential 1
+    if (prevTaskInd === 4) {
+        randInd = 5;
+    } else if (prevTaskInd === 5) {
         randInd = 6;
-    } else if (prevTaskInd === 6) {
-        randInd = 7;
-    } else if (randInd === 6 || randInd === 7) {
-        while (randInd === 6 || randInd === 7) {
+    } else if (randInd === 5 || randInd === 6 || randInd === 10 || randInd === 11) {
+        while (randInd === 5 || randInd === 6 || randInd === 10 || randInd === 11) {
+            randInd = Math.floor(Math.random() * taskPool.length);
+        }
+    }
+
+    // Sequential 2
+    if (prevTaskInd === 9) {
+        randInd = 10;
+    } else if (prevTaskInd === 10) {
+        randInd = 11;
+    } else if (randInd === 5 || randInd === 6 || randInd === 10 || randInd === 11) {
+        while (randInd === 5 || randInd === 6 || randInd === 10 || randInd === 11) {
             randInd = Math.floor(Math.random() * taskPool.length);
         }
     }
@@ -412,10 +550,6 @@ function startGame() {
 document.addEventListener("bombModeStart", () => {
     document.body.classList.add("bomb-mode");
     modal.classList.add("hidden");
-    alert(`Welcome to Bomb Mode.
-    The timer is now lethal.
-    Finish as many tasks as you can before running out of time.
-    Or, turn the dial, but lost points as you do so.`);
     timesTurned = 0;
     score = 0;
     startGame();
@@ -433,17 +567,11 @@ document.addEventListener("endGame", () => {
     finalScoreText.textContent = `Your final score is ${score} points.`
     finalStatsText.textContent = (`You completed ${totalTaskNum} task${totalTaskNum === 1 ? "" : "s"} and spun the dial ${timesTurned} time${timesTurned === 1 ? "" : "s"}.`)
     
-    while (
-        todoColumn.lastElementChild &&
-        todoColumn.lastElementChild.tagName !== "HR"
-    ) {
+    while (todoColumn.lastElementChild && todoColumn.lastElementChild.tagName !== "HR") {
         todoColumn.removeChild(todoColumn.lastElementChild);
     }
 
-    while (
-        lockColumn.lastElementChild &&
-        lockColumn.lastElementChild.tagName !== "HR"
-    ) {
+    while (lockColumn.lastElementChild && lockColumn.lastElementChild.tagName !== "HR") {
         lockColumn.removeChild(lockColumn.lastElementChild);
     }
 });
@@ -454,8 +582,12 @@ restartButton.addEventListener("click", () => {
     timesTurned = 0;
     currentTaskNum = 0;
     totalTaskNum = 0;
-    prevTaskInd = {};
+    prevTaskInd = -1;
     gameLoop = true;
+
+    while (lockColumn.lastElementChild && lockColumn.lastElementChild.tagName !== "HR") {
+        lockColumn.removeChild(lockColumn.lastElementChild);
+    }
 
     if (scoreText) {
         scoreText.textContent = `Score: ${score}`;
