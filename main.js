@@ -585,8 +585,8 @@ restartButton.addEventListener("click", () => {
     prevTaskInd = -1;
     gameLoop = true;
 
-    while (lockColumn.lastElementChild && lockColumn.lastElementChild.tagName !== "HR") {
-        lockColumn.removeChild(lockColumn.lastElementChild);
+    while (completedColumn.lastElementChild && completedColumn.lastElementChild.tagName !== "HR") {
+        completedColumn.removeChild(completedColumn.lastElementChild);
     }
 
     if (scoreText) {
