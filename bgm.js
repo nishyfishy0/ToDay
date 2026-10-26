@@ -1,103 +1,81 @@
-const timerText = document.getElementById('time');
-const dial = document.getElementById('dial');
-const pointer = document.getElementById('pointer');
-const cranksfx = new Audio("sfx/crank-tick.mp3")
+const am4 = new Audio('music/am4.mp3');
+const balcony = new Audio('music/Balcony.mp3');
+const daylight_over = new Audio('music/DaylightOver.mp3');
+const downtown = new Audio('music/Downtown.mp3');
+const explosionsfx = new Audio("explosion.mp3")
 
-cranksfx.volume = 0.75;
-
-
-
-let initDuration = 0;
-let timerLocked = false;
-let duration = 30_000;
-let maxTime = 60_000;
-let endTime = Date.now() + duration;
-let initEndTime = 0;
-let remainingTime = 0;
-let gameEnded = true;
-let initX = 0;
-let textStatus = "";
-let vignetteOpacity = 0;
+const bgmSongs = [am4, balcony, daylight_over, downtown];
+let currentSong = null;
+let gameLoop = false;
+let vol = 0.5
 
 
-function updateTimer() {
-    remainingTime = Math.max(0, ((endTime - Date.now()) / 1000));
 
-    const progress = 1 - (remainingTime / 60);
-    vignetteOpacity = Math.pow(progress, 3) * 0.65;
-    document.body.style.setProperty("--vignette-opacity", vignetteOpacity);
-                                    
-    timerText.textContent = `${remainingTime.toFixed(2).padStart(5, '0')} ${textStatus}`;
+function playRandomSong() {
+    if (!gameLoop) return;
 
+    const filteredSongList = bgmSongs.filter(song => song !== currentSong);
 
-    const selectedTime = Math.max(0, endTime - Date.now());
-    const angle = (selectedTime / maxTime) * Math.PI;
+    currentSong = filteredSongList[
+        Math.floor(Math.random() * filteredSongList.length)
+    ];
 
-    const degrees = -(angle * 180 / Math.PI);
-    pointer.style.transform = `rotate(${degrees}deg)`;
-    
-    if (remainingTime === 0 && !gameEnded) {
-        gameEnded = true;
-        document.dispatchEvent(new Event("endGame"));
-    }
+    currentSong.currentTime = 0;
+    currentSong.play();
+
+    currentSong.onended = playRandomSong;
+}
+
+function fadeOut() {
+    vol -= 0.05;
+
+    am4.volume = vol;
+    balcony.volume = vol;
+    daylight_over.volume = vol;
+    downtown.volume = vol;
+}
+
+function fadeIn() {
+    const fadeInterval = setInterval(() => {
+        vol = Math.min(0.5, vol + 0.05);
+
+        bgmSongs.forEach(song => {
+            song.volume = vol;
+        });
+
+        if (vol >= 0.5) {
+            clearInterval(fadeInterval);
+        }
+    }, 100);
 }
 
 
 
-setInterval(updateTimer, 100);
-
-
-
-dial.addEventListener("pointerdown", (initPos) => {
-    if (!timerLocked) {
-        initX = initPos.clientX;    //  Here we're setting the initial X
-        // clientX is the current mouse cursor X position
-    
-        initEndTime = endTime;
-        initDuration = endTime - Date.now();
-        
-        dial.setPointerCapture(initPos.pointerId);
-        dial.addEventListener('pointermove', onPointerMove);
-        dial.addEventListener('pointerup', onPointerUp);
-    
-        document.dispatchEvent(new Event("dialTurned"));
-    }
-});
-
-function onPointerMove(mousePos) {
-    const deltaX = Math.abs(mousePos.clientX - initX);
-    cranksfx.play();
-
-    const newDuration = Math.max(
-        0,
-        Math.min(maxTime, initDuration + deltaX * 10)
-    );
-
-    endTime = Date.now() + newDuration;
-    };
-
-function onPointerUp(mousePos) {
-    // literally js like removing listeners or smth
-    dial.releasePointerCapture(mousePos.pointerId);
-    dial.removeEventListener('pointermove', onPointerMove);
-    dial.removeEventListener('pointerup', onPointerUp);
-};
-
-
-
-document.addEventListener("lockTimer", () => {
-    timerLocked = true;
-    textStatus = "🔒";
-});
-
-document.addEventListener("unlockTimer", () => {
-    timerLocked = false;
-    textStatus = "";
-});
-
 document.addEventListener("bombModeStart", () => {
-    vignetteOpacity = 0;
-    document.body.style.setProperty("--vignette-opacity", 0);
-    endTime = Date.now() + 60_000;
-    gameEnded = false;
+    gameLoop = true;
+    vol = 0;
+    playRandomSong();
+    fadeIn();
+});
+
+document.addEventListener("endGame", () => {
+    gameLoop = false;
+    explosionsfx.play();
+
+    const fadeInterval = setInterval(() => {
+        vol = Math.max(0, vol - 0.05);
+
+        bgmSongs.forEach(song => {
+            song.volume = vol;
+        });
+
+        if (vol <= 0) {
+            clearInterval(fadeInterval);
+
+            bgmSongs.forEach(song => {
+                song.pause();
+                song.currentTime = 0;
+            });
+        }
+    }, 100);
 });
