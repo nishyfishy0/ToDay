@@ -1,6 +1,6 @@
-const am4 = new Audio('music/am 4_00.mp3');
+const am4 = new Audio('music/am4_00.mp3');
 const balcony = new Audio('music/Balcony.mp3');
-const daylight_over = new Audio('music/Daylight Over.mp3');
+const daylight_over = new Audio('music/DaylightOver.mp3');
 const downtown = new Audio('music/Downtown.mp3');
 const explosionsfx = new Audio("explosion.mp3")
 
