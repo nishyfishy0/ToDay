@@ -1,7 +1,7 @@
 const timerText = document.getElementById('time');
 const dial = document.getElementById('dial');
 const pointer = document.getElementById('pointer');
-const cranksfx = new Audio("crank-tick.mp3")
+const cranksfx = new Audio("sfx/crank-tick.mp3")
 
 cranksfx.volume = 0.75;
 
