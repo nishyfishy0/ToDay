@@ -9,6 +9,7 @@ const finalStatsText = document.getElementById("finalStats");
 const restartButton = document.getElementById("restartButton");
 
 let score = 0;
+let lockProbability = 5;
 let timerLocked = false;
 let username = `user${Math.floor(Math.random() * (9999999 - 1000000 + 1)) + 1000000}`;
 let gameLoop = true;
@@ -241,6 +242,22 @@ function complete(event) {
             btn.dataset.requiredClicks = requiredClicks - 1;
             btntext.textContent = `${btn.dataset.txt} (${btn.dataset.requiredClicks})`;
         }
+    }
+
+    if (totalTaskNum >= 200) {
+        lockProbability = 50;
+    } else if (totalTaskNum >= 150) {
+        lockProbability = 40;
+    } else if (totalTaskNum >= 100) {
+        lockProbability = 30;
+    } else if (totalTaskNum >= 80) {
+        lockProbability = 25;
+    } else if (totalTaskNum >= 60) {
+        lockProbability = 20;
+    } else if (totalTaskNum >= 40) {
+        lockProbability = 15;
+    } else if (totalTaskNum >= 20) {
+        lockProbability = 10;
     }
 }
 
@@ -484,39 +501,48 @@ function generateVerificationTask() {
 }
 
 function chooseRandomTask() {
-    let randInd = Math.floor(Math.random() * taskPool.length)
+    let chances = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+    let lockChance = chances[Math.floor(Math.random() * chances.length)];
     let chosenTask = -1;
+    let randInd;
+
+    if (lockChance <= lockProbability) {
+        randInd = Math.floor(Math.random() * 2);
+        
+        if (randInd === 1) {
+            randInd = 7;
+        } else {
+            randInd = 22;
+        }
+    } else {
+        randInd = Math.floor(Math.random() * taskPool.length);
+        
+        // Sequential 1
+        if (prevTaskInd === 4) {
+            randInd = 5;
+        } else if (prevTaskInd === 5) {
+            randInd = 6;
+        } else if (randInd === 5 || randInd === 6) {
+            while (randInd === 5 || randInd === 6 || randInd === 10 || randInd === 11) {
+                randInd = Math.floor(Math.random() * taskPool.length);
+            }
+        }
     
-    // Sequential 1
-    if (prevTaskInd === 4) {
-        randInd = 5;
-    } else if (prevTaskInd === 5) {
-        randInd = 6;
-    } else if (randInd === 5 || randInd === 6 || randInd === 10 || randInd === 11) {
-        while (randInd === 5 || randInd === 6 || randInd === 10 || randInd === 11) {
-            randInd = Math.floor(Math.random() * taskPool.length);
+        // Sequential 2
+        if (prevTaskInd === 9) {
+            randInd = 10;
+        } else if (prevTaskInd === 10) {
+            randInd = 11;
+        } else if (randInd === 10 || randInd === 11) {
+            while (randInd === 5 || randInd === 6 || randInd === 10 || randInd === 11) {
+                randInd = Math.floor(Math.random() * taskPool.length);
+            }
         }
     }
-
-    // Sequential 2
-    if (prevTaskInd === 9) {
-        randInd = 10;
-    } else if (prevTaskInd === 10) {
-        randInd = 11;
-    } else if (randInd === 5 || randInd === 6 || randInd === 10 || randInd === 11) {
-        while (randInd === 5 || randInd === 6 || randInd === 10 || randInd === 11) {
-            randInd = Math.floor(Math.random() * taskPool.length);
-        }
-    }
-
-    if (taskPool[prevTaskInd]?.timerLock === true) {
-        while (taskPool[randInd]?.timerLock === true) {
-            randInd = Math.floor(Math.random() * taskPool.length);
-        }
-    }
-   
+    
     chosenTask = taskPool[randInd];
     prevTaskInd = randInd;
+   
 
     if (typeof chosenTask === "function") {
         chosenTask = chosenTask();
@@ -579,6 +605,7 @@ document.addEventListener("endGame", () => {
 
 restartButton.addEventListener("click", () => {
     score = 0;
+    lockProbability = 5;
     timesTurned = 0;
     currentTaskNum = 0;
     totalTaskNum = 0;
