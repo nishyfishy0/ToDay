@@ -2,16 +2,18 @@ const todoColumn = document.querySelectorAll('.column')[0]; // Selects the FIRST
 const completedColumn = document.querySelectorAll('.column')[2]; // Selects the THIRD element with class "column"
 const modal2 = document.querySelector(".modal2");
 const startButton = document.getElementById("startButton");
-const lofiRain = new Audio("music/lofiRain.mp3")
+const lofiRain = new Audio("music/lofiRain.mp3");
 
-let vol = 0.5;
+let vol = 0.9;
 lofiRain.volume = vol;
+
 
 
 
 function complete(event) {
     const btn = event.target;
     const task = btn.closest(".task-card");
+    const span = task.querySelector("span")
     const taskID = task.dataset.taskId;
 
     if (btn.textContent === "") {
@@ -19,6 +21,19 @@ function complete(event) {
 
         if (inp.value.toLowerCase() === inp.dataset.answer) {
             completedColumn.appendChild(task.querySelector("span"));
+            
+            span.classList.remove("fade-in-slide-right");
+            void span.offsetWidth;
+            span.classList.add("fade-in-slide-right");
+
+            task.classList.remove("fade-out-slide-right");
+            void task.offsetWidth;
+            task.classList.add("fade-out-slide-right");
+
+            task.addEventListener("animationend", () => {
+                task.remove();
+            }, { once: true })
+
             task.remove();
 
             setTimeout(() => {
@@ -26,8 +41,19 @@ function complete(event) {
             }, 500);
         }
     } else {
-        completedColumn.appendChild(task.querySelector("span"));
-        task.remove();
+        completedColumn.appendChild(span);
+
+        span.classList.remove("fade-in-slide-right");
+        void span.offsetWidth;
+        span.classList.add("fade-in-slide-right");
+
+        task.classList.remove("fade-out-slide-right");
+        void task.offsetWidth;
+        task.classList.add("fade-out-slide-right");
+
+        task.addEventListener("animationend", () => {
+            task.remove();
+        }, { once: true })
 
         setTimeout(() => {
             nextTask(taskID);
@@ -107,7 +133,6 @@ function createTask(id, title, desc, btn, txt, reqInp) {
     task.dataset.taskId = id;
     task.append(ident, head, description);
     
-
     if (typeof btn !== "undefined") {
         const button = document.createElement("button");
         const btntxt = document.createElement("p");
@@ -121,7 +146,7 @@ function createTask(id, title, desc, btn, txt, reqInp) {
     } else {
         const inp = document.createElement("input");
         const submit = document.createElement("button");
-
+        
         inp.placeholder = txt;
         submit.textContent = "";
         inp.dataset.answer = reqInp.toLowerCase();
@@ -137,11 +162,14 @@ function createTask(id, title, desc, btn, txt, reqInp) {
             }
         });
     }
-
+    
     todoColumn.append(task)
     
-    const completionReq = task.querySelector(".completeTask");
+    task.classList.remove("fade-slide-up");
+    void task.offsetWidth;
+    task.classList.add("fade-slide-up");
 
+    const completionReq = task.querySelector(".completeTask");
     completionReq.addEventListener("click", complete);
 }
 
