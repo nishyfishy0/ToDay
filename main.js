@@ -172,6 +172,7 @@ function getDifficulty() {
 function complete(event) {
     const btn = event.currentTarget;
     const task = btn.closest(".task-card");
+    const span = task.querySelector("span");
 
     if (btn.textContent === "") {
         const inp = task.querySelector("input");
@@ -184,10 +185,23 @@ function complete(event) {
             if (isCorrect) {
                 completedColumn.appendChild(task.querySelector("span"));
                 if (task.dataset.timerLock === "true") {
-                    document.dispatchEvent(new Event("unlockTimer"));
-                    timerLocked = false;
+                    if (lockColumn.querySelector(".task-card") === null) {
+                        document.dispatchEvent(new Event("unlockTimer"));
+                        timerLocked = false;
+                    }
                 }
-                task.remove();
+
+                span.classList.remove("fade-in-slide-right");
+                void span.offsetWidth;
+                span.classList.add("fade-in-slide-right");
+                
+                task.classList.remove("fade-out-slide-right");
+                void task.offsetWidth;
+                task.classList.add("fade-out-slide-right");
+
+                task.addEventListener("animationend", () => {
+                    task.remove();
+                }, { once: true })
 
                 setTimeout(() => {
                     nextTask(); 
@@ -202,10 +216,23 @@ function complete(event) {
         } else if (inp.value.trim().toLowerCase() === inp.dataset.answer) {
             completedColumn.appendChild(task.querySelector("span"));
             if (task.dataset.timerLock === "true") {
-                document.dispatchEvent(new Event("unlockTimer"));
-                timerLocked = false;
+                if (lockColumn.querySelector(".task-card") === null) {
+                    document.dispatchEvent(new Event("unlockTimer"));
+                    timerLocked = false;
+                }
             }
-            task.remove();
+
+            span.classList.remove("fade-in-slide-right");
+            void span.offsetWidth;
+            span.classList.add("fade-in-slide-right");
+
+            task.classList.remove("fade-out-slide-right");
+            void task.offsetWidth;
+            task.classList.add("fade-out-slide-right");
+            
+            task.addEventListener("animationend", () => {
+                task.remove();
+            }, { once: true })
 
             setTimeout(() => {
                 nextTask(); 
@@ -223,10 +250,23 @@ function complete(event) {
         if (requiredClicks <= 1) {
             completedColumn.appendChild(task.querySelector("span"));
             if (task.dataset.timerLock === "true") {
-                document.dispatchEvent(new Event("unlockTimer"));
-                timerLocked = false;
+                if (lockColumn.querySelector(".task-card") === null) {
+                    document.dispatchEvent(new Event("unlockTimer"));
+                    timerLocked = false;
+                }
             }
-            task.remove();
+
+            span.classList.remove("fade-in-slide-right");
+            void span.offsetWidth;
+            span.classList.add("fade-in-slide-right");
+
+            task.classList.remove("fade-out-slide-right");
+            void task.offsetWidth;
+            task.classList.add("fade-out-slide-right");
+
+            task.addEventListener("animationend", () => {
+                task.remove();
+            }, { once: true })
 
             setTimeout(() => {
                 nextTask();
@@ -264,6 +304,10 @@ function complete(event) {
 function nextTask() {
     if (gameLoop) {
         chooseRandomTask();
+        if (lockColumn.querySelector(".task-card") === null) {
+            document.dispatchEvent(new Event("unlockTimer"));
+            timerLocked = false;
+        }
     }
 }
 
@@ -336,6 +380,10 @@ function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, time
         lockColumn.append(task)
     }
     
+    task.classList.remove("fade-slide-up");
+    void task.offsetWidth;
+    task.classList.add("fade-slide-up");
+
     const completionReq = task.querySelector(".completeTask");
     completionReq.addEventListener("click", complete);
 }
