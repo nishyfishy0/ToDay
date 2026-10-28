@@ -34,8 +34,6 @@ function complete(event) {                // Everything that should be done when
                 task.remove();
             }, { once: true })
 
-            task.remove();
-
             setTimeout(() => {
                 nextTask(taskID);            // Generate next task
             }, 500);
