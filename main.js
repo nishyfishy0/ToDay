@@ -8,7 +8,7 @@ const finalScoreText = document.getElementById("finalScore");
 const finalStatsText = document.getElementById("finalStats");
 const restartButton = document.getElementById("restartButton");
 
-let score = 0;
+let score = 0;                                                                                    // LOOOOOOOOOOOOOOOOOOTS OF VARSSSSSSSSSS
 let lockProbability = 5;
 let timerLocked = false;
 let username = `user${Math.floor(Math.random() * (9999999 - 1000000 + 1)) + 1000000}`;
@@ -23,7 +23,7 @@ let wordSet = new Set();
 let words = [];
 let morphemes = [];
 
-fetch('words.txt')
+fetch('words.txt')                                    // Importing the dictionary (this is a jklm.fun wordbomb dictionary i found online i forgot where tho)
     .then(response => response.text())
     .then(rawText => {
         const cleanArray = rawText
@@ -34,7 +34,7 @@ fetch('words.txt')
         words = [...wordSet];
     });
 
-fetch('morphemes.txt')
+fetch('morphemes.txt')                                    // Importing the morpheme dictionary (also wordbomb)
     .then(response => response.text())
     .then(rawText => {
         const cleanArray = rawText
@@ -46,7 +46,7 @@ fetch('morphemes.txt')
     });
 
 
-let taskPool = [
+let taskPool = [                                                    // All the tasks
     {
         title: "Click!",
         desc: "Click the button 10 times.",
@@ -156,20 +156,20 @@ let taskPool = [
 
 
 score = 0;
-maxTasks = 5;
+maxTasks = 5;                        // I was going to increase how many tasks you get at a time, only to realise it was useless. Repurposed as an upper limit
 
 scoreText = newTask.querySelector("p");
-if (scoreText) {
+if (scoreText) {                                                   // Setting score text 
     scoreText.textContent = `Score: ${score}`;
 }
 
 
 
-function getDifficulty() {
+function getDifficulty() {                                    // Retrieving the difficulty
     return 1 + Math.floor(totalTaskNum / 10);
 }
 
-function complete(event) {
+function complete(event) {                                    // Everything that needs to be done on task completion. Mostly copypasted from tutorial.js soo im not going to rexplain too much
     const btn = event.currentTarget;
     const task = btn.closest(".task-card");
     const span = task.querySelector("span");
@@ -177,25 +177,25 @@ function complete(event) {
     if (btn.textContent === "") {
         const inp = task.querySelector("input");
     
-        if (!("answer" in inp.dataset)) {
+        if (!("answer" in inp.dataset)) {                                             // Only for tasks with text input
             const isCorrect = inp.validate
                 ? inp.validate(inp.value.trim())
                 : inp.value.trim().toLowerCase() === inp.dataset.answer;
 
-            if (isCorrect) {
+            if (isCorrect) {                                                          // This particular conditional only works if the particular task doesn't have one single answer
                 completedColumn.appendChild(task.querySelector("span"));
                 if (task.dataset.timerLock === "true") {
                     if (lockColumn.querySelector(".task-card") === null) {
-                        document.dispatchEvent(new Event("unlockTimer"));
+                        document.dispatchEvent(new Event("unlockTimer"));                // Unlocks timer ONLY IF THERE ARE NO TIMER-LOCKING TASKS LEFT
                         timerLocked = false;
                     }
                 }
 
-                span.classList.remove("fade-in-slide-right");
+                span.classList.remove("fade-in-slide-right");                // ID animation into the completed column
                 void span.offsetWidth;
                 span.classList.add("fade-in-slide-right");
                 
-                task.classList.remove("fade-out-slide-right");
+                task.classList.remove("fade-out-slide-right");                // Task animation out of to-do column (or lockColumn)
                 void task.offsetWidth;
                 task.classList.add("fade-out-slide-right");
 
@@ -204,16 +204,16 @@ function complete(event) {
                 }, { once: true })
 
                 setTimeout(() => {
-                    nextTask(); 
+                    nextTask();                         // Generate new task
                 }, 1000);
 
                 score += 100;
                 totalTaskNum++;
                 if (scoreText) {
-                    scoreText.textContent = `Score: ${score}`
+                    scoreText.textContent = `Score: ${score}`            // Update score
                 };
             }
-        } else if (inp.value.trim().toLowerCase() === inp.dataset.answer) {
+        } else if (inp.value.trim().toLowerCase() === inp.dataset.answer) {        // For text input tasks in general
             completedColumn.appendChild(task.querySelector("span"));
             if (task.dataset.timerLock === "true") {
                 if (lockColumn.querySelector(".task-card") === null) {
@@ -222,11 +222,11 @@ function complete(event) {
                 }
             }
 
-            span.classList.remove("fade-in-slide-right");
+            span.classList.remove("fade-in-slide-right");                // ID animation into completed column
             void span.offsetWidth;
             span.classList.add("fade-in-slide-right");
 
-            task.classList.remove("fade-out-slide-right");
+            task.classList.remove("fade-out-slide-right");                // Task animation out of to-do column (or lockColumn)
             void task.offsetWidth;
             task.classList.add("fade-out-slide-right");
             
@@ -235,19 +235,19 @@ function complete(event) {
             }, { once: true })
 
             setTimeout(() => {
-                nextTask(); 
+                nextTask();                         // Generate next task
             }, 1000);
 
             score += 100;
             totalTaskNum++;
-            if (scoreText) {
+            if (scoreText) {                                        // update score text
                 scoreText.textContent = `Score: ${score}`
             };
         }
-    } else {
+    } else {                                                                            // Everything under here is for buttons
         const requiredClicks = parseInt(btn.dataset.requiredClicks) || 1;
 
-        if (requiredClicks <= 1) {
+        if (requiredClicks <= 1) {                                    // Check if button is clicked enough times
             completedColumn.appendChild(task.querySelector("span"));
             if (task.dataset.timerLock === "true") {
                 if (lockColumn.querySelector(".task-card") === null) {
@@ -256,11 +256,11 @@ function complete(event) {
                 }
             }
 
-            span.classList.remove("fade-in-slide-right");
+            span.classList.remove("fade-in-slide-right");                // ID animation into completed column
             void span.offsetWidth;
             span.classList.add("fade-in-slide-right");
 
-            task.classList.remove("fade-out-slide-right");
+            task.classList.remove("fade-out-slide-right");                // Task animation out of to do column (no button tasks for timer lock column)
             void task.offsetWidth;
             task.classList.add("fade-out-slide-right");
 
@@ -269,12 +269,12 @@ function complete(event) {
             }, { once: true })
 
             setTimeout(() => {
-                nextTask();
+                nextTask();                                        // generate next task
             }, 1000);
 
             score += 100;
             totalTaskNum++;
-            if (scoreText) {
+            if (scoreText) {                                        // update score text
                 scoreText.textContent = `Score: ${score}`;
             }
         } else {
@@ -284,7 +284,7 @@ function complete(event) {
         }
     }
 
-    if (totalTaskNum >= 200) {
+    if (totalTaskNum >= 200) {                                    // Update the probability of getting a timer locking task based on total number of tasks completed
         lockProbability = 50;
     } else if (totalTaskNum >= 150) {
         lockProbability = 40;
@@ -303,15 +303,15 @@ function complete(event) {
 
 function nextTask() {
     if (gameLoop) {
-        chooseRandomTask();
-        if (lockColumn.querySelector(".task-card") === null) {
+        chooseRandomTask();                                        // Choose a random task
+        if (lockColumn.querySelector(".task-card") === null) {            // Unlock the timer if lock column is empty
             document.dispatchEvent(new Event("unlockTimer"));
             timerLocked = false;
         }
     }
 }
 
-function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, timerLock) {
+function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, timerLock) {            // Everything here is for creating a task. Most of this is in tutorial.js
     const task = document.createElement("div");
     const ident = document.createElement("span");
     const head = document.createElement("h3");
@@ -325,11 +325,11 @@ function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, time
     task.dataset.taskId = id;
     task.append(ident, head, description);
     
-    if (typeof btn !== "undefined") {
+    if (typeof btn !== "undefined") {                        // For button tasks
         const button = document.createElement("button");
         const btntxt = document.createElement("p");
 
-        if (reqClicks === 1) {
+        if (reqClicks === 1) {                // Changes button text depending on num of required clicks
             btntxt.textContent = btn;
         } else {
             btntxt.textContent = `${btn} (${reqClicks})`;
@@ -342,7 +342,7 @@ function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, time
         button.classList.add("completeTask");
         task.append(button);
         
-    } else {
+    } else {                                                // For  text input tasks
         const inp = document.createElement("input");
         const submit = document.createElement("button");
 
@@ -352,7 +352,7 @@ function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, time
         submit.style.backgroundColor = "#f2f2f2";
         submit.style.border = "0px";
 
-        if (typeof taskData !== "undefined") {
+        if (typeof taskData !== "undefined") {            // For tasks with no one concrete answer
             inp.validate = taskData.validate;
         } else {
             inp.dataset.answer = reqInp.toLowerCase();
@@ -360,7 +360,7 @@ function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, time
 
         task.append(inp, submit);
 
-        inp.addEventListener("keydown", (event) => {
+        inp.addEventListener("keydown", (event) => {            // Allow for clicking enter to submit text input
             if (event.key === "Enter") {
                 submit.click();
             }
@@ -370,17 +370,17 @@ function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, time
     task.dataset.timerLock = timerLock;
     
     if (timerLock === true) {
-        document.dispatchEvent(new Event("lockTimer"));
+        document.dispatchEvent(new Event("lockTimer"));        // Lock timer accordingly
         timerLocked = true;
     }
 
-    if (!(timerLock === true)) {
+    if (!(timerLock === true)) {            // Sends tasks to their respective columns, based on whether or not they are to lock the timer
         todoColumn.append(task);
     } else {
         lockColumn.append(task)
     }
     
-    task.classList.remove("fade-slide-up");
+    task.classList.remove("fade-slide-up");                // Fade the task in and slide upwards (polish)
     void task.offsetWidth;
     task.classList.add("fade-slide-up");
 
@@ -388,9 +388,9 @@ function createTask(id, title, desc, btn, reqClicks, txt, reqInp, taskData, time
     completionReq.addEventListener("click", complete);
 }
 
-function generateAdditionTask() {
+function generateAdditionTask() {                    // Generate an addition task
     const difficulty = getDifficulty();
-    const max = Math.min(50 * difficulty, 500);
+    const max = Math.min(50 * difficulty, 500);            // Upper limit for addends. Updates based on difficulty
 
     const a = Math.floor(Math.random() * max) + 1;
     const b = Math.floor(Math.random() * max) + 1;
@@ -404,7 +404,7 @@ function generateAdditionTask() {
     };
 }
 
-function generateMultiplicationTask() {
+function generateMultiplicationTask() {                    // Generate a multiplication task
     const a = Math.floor(Math.random() * 13);
     const b = Math.floor(Math.random() * 13);
 
@@ -417,8 +417,8 @@ function generateMultiplicationTask() {
     };
 }
 
-function generateRandomWordTask() {
-    const randWord = words[Math.floor(Math.random() * words.length)]; 
+function generateRandomWordTask() {                                        // Generate a random word task
+    const randWord = words[Math.floor(Math.random() * words.length)];            // Get a random word
 
     return {
         title: "Random Word!",
@@ -429,7 +429,7 @@ function generateRandomWordTask() {
     };
 }
 
-function generateWordBombTask() {
+function generateWordBombTask() {                                                // Generate a word bomb task
     const morpheme = morphemes[Math.floor(Math.random() * morphemes.length)]; 
 
     return {
@@ -437,7 +437,7 @@ function generateWordBombTask() {
         desc: `Type a word containing the following: ${morpheme}.`,
         type: "input",
         placeholder: "Type a word...",
-        validate: (answer) => {
+        validate: (answer) => {                            // Check if the input has both the morpheme and is a valid word
             const word = answer.toLowerCase();
 
             return (
@@ -448,10 +448,10 @@ function generateWordBombTask() {
     };
 }
 
-function generateSubtractionTask() {
+function generateSubtractionTask() {                    // Generate a subtraction task 
     const difficulty = getDifficulty();
-    const max1 = Math.min(20 * difficulty, 200);
-    const max2 = Math.min(10 * difficulty, 100);
+    const max1 = Math.min(20 * difficulty, 200);        // Update minuend upper limit based on difficulty
+    const max2 = Math.min(10 * difficulty, 100);        // Update subtrahend upper limit based on difficulty
 
     const a = Math.floor(Math.random() * max1) + 20;
     const b = Math.floor(Math.random() * max2) + 1;
@@ -465,9 +465,20 @@ function generateSubtractionTask() {
     };
 }
 
-function generateReverseWordTask() {
-    const words = ["banana", "dial", "spinner", "puzzle", "window", "rocket", "garden"];
-    const word = words[Math.floor(Math.random() * words.length)];
+function generateReverseWordTask() {                                                                    // Generate reverse word task
+    const words = ["banana", "dial", "spinner", "puzzle", "window", "rocket", "garden", "canada",            // GIANT WORD LIIST (thanks Gemini)
+                   "panama", "havana", "papaya", "katana", "cabana", "savanna", "solitude", "lemonade",
+                   "dominoes", "monotone", "parabola", "caramel", "macaroni", "origami", "avocado",
+                   "panorama", "pelican", "mandolin", "radiant", "monument", "domino", "mementos",
+                   "cardinal", "monorail", "mariner", "mirage", "talisman", "calico", "parade",
+                   "monarch", "canopy", "solstice", "paradise", "dilemma", "matador", "serenata",
+                   "marzipan", "monopoly", "parakeet", "calamari", "paramount", "marigold", "caravan",
+                   "parable", "paladin", "maritime", "cannibal", "pantaloon", "volcano", "harmonic",
+                   "velocity", "dinosaur", "parasol", "pipeline", "symphony", "operatic", "chameleon",
+                   "metropolis", "tarantula", "monastery", "telephoto", "animator", "panoramic",
+                   "catalyst", "cinnamon", "marathon", "metaphor", "navigator", "melodic", "serenade",
+                   "horizon", "diameter"];
+    const word = words[Math.floor(Math.random() * words.length)];        // Choose a random word
     return {
         title: "Reverse It",
         desc: `Type "${word}" backwards.`,
@@ -477,8 +488,8 @@ function generateReverseWordTask() {
     };
 }
 
-function generateRandomClicksTask() {
-    const clicks = Math.floor(Math.random() * 15) + 5;
+function generateRandomClicksTask() {                               // Generate Random Clicks Taks
+    const clicks = Math.floor(Math.random() * 15) + 5;                // Yeah its really RNG what you thought I was lying?
     return {
         title: "Random Clicks",
         desc: `Click the button ${clicks} times. Blame RNG.`,
@@ -488,10 +499,10 @@ function generateRandomClicksTask() {
     };
 }
 
-function generateCodeTask() {
+function generateCodeTask() {                                        // Generate code task
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     let code = "";
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 6; i++) {                                    // Choose a random letter per char in code
         code += chars[Math.floor(Math.random() * chars.length)];
     }
     return {
@@ -503,11 +514,26 @@ function generateCodeTask() {
     };
 }
 
-function generateCountLetterTask() {
-    const words = ["Mississippi", "bookkeeper", "strawberry", "banana", "balloon"];
+function generateCountLetterTask() {                                                // Generate a letter count task
+    const words = ["Mississippi", "bookkeeper", "strawberry", "banana", "balloon",                        // Another list of random words for letter counting (thanks Gemini)
+                   "waffle", "thunder", "spatula", "galaxy", "cucumber","hologram",
+                   "lighthouse", "velvet", "chimpanzee", "pancake", "squadron",
+                   "subwoofer", "kaleidoscope", "biscuit", "dreadnought", "marshmallow",
+                   "avocado", "vortex", "symphony", "jackrabbit", "cobweb", "scooter", "boomerang",
+                   "starlight", "pretzel", "glacier", "blizzard", "armadillo", "trampoline",
+                   "xylophone", "mushrooms", "porcupine", "tambourine", "cauliflower", "whippersnapper",
+                   "gargoyle", "zigzag", "squeegee", "flamingo", "labyrinth", "meatball", "catapult",
+                   "monocle", "peanuts", "submariner", "bagpipe", "dandelion", "hovercraft", "pajamas",
+                   "cantaloupe", "microscope", "typewriter", "snowstorm", "gumball", "seashell", "blueprint",
+                   "firefly", "albatross", "geode", "popcorn", "tumbleweed", "windmill", "accordion", "snickerdoodle",
+                   "dinosaur", "periscope", "dragonfly", "pineapple", "scarecrow", "caterpillar", "jellybean",
+                   "spacecraft", "milkshake", "astronaut", "nightingale", "chinchilla", "waterfall", "spaghetti",
+                   "wheelbarrow", "woodpecker", "cheeseburger", "bobsled", "grasshopper", "kazoo", "marshland",
+                   "steamboat", "sunflower", "treadmill", "whirlpool", "zucchini", "brainstorm", "butterscotch",
+                   "centipede", "dustbunny", "firecracker", "gooseberry", "hummingbird", "jack-o-lantern", "kingfisher"];
     const word = words[Math.floor(Math.random() * words.length)];
     const letters = [...new Set(word.toLowerCase())];
-    const letter = letters[Math.floor(Math.random() * letters.length)];
+    const letter = letters[Math.floor(Math.random() * letters.length)];                        // Choose a random letter to prompt about its count
     const count = word.toLowerCase().split(letter).length - 1;
 
     return {
@@ -519,12 +545,36 @@ function generateCountLetterTask() {
     };
 }
 
-function generateOddOneOutTask() {
+function generateOddOneOutTask() {                                    // Generate an Odd One Out task
     const sets = [
-        { items: "apple, banana, carrot, grape", answer: "carrot" },
+        { items: "apple, banana, carrot, grape", answer: "carrot" },                    // More prompts (thanks Gemini)
         { items: "dog, cat, hamster, table", answer: "table" },
         { items: "red, blue, square, green", answer: "square" },
-        { items: "Paris, London, Tokyo, Africa", answer: "Africa" }
+        { items: "Paris, London, Tokyo, Africa", answer: "Africa" },
+        { items: "piano, guitar, trumpet, easel", answer: "easel" },
+        { items: "mercury, venus, moon, mars", answer: "moon" },
+        { items: "run, jump, swim, fast", answer: "fast" },
+        { items: "triangle, circle, cube, rectangle", answer: "cube" },
+        { items: "salmon, tuna, shark, dolphin", answer: "dolphin" },
+        { items: "doctor, teacher, firefighter, hospital", answer: "hospital" },
+        { items: "oxygen, helium, water, nitrogen", answer: "water" },
+        { items: "fork, spoon, knife, napkin", answer: "napkin" },
+        { items: "dollar, euro, yen, wallet", answer: "wallet" },
+        { items: "baseball, soccer, tennis, marathon", answer: "marathon" },
+        { items: "winter, autumn, rain, spring", answer: "rain" },
+        { items: "shirt, pants, jacket, shoes", answer: "shoes" },
+        { items: "Pacific, Atlantic, Amazon, Indian", answer: "Amazon" },
+        { items: "violin, cello, flute, viola", answer: "flute" },
+        { items: "cherry, strawberry, watermelon, blueberry", answer: "watermelon" },
+        { items: "microscope, telescope, magnifying glass, binoculars", answer: "microscope" },
+        { items: "keyboard, mouse, monitor, headphone", answer: "monitor" },
+        { items: "bee, butterfly, bat, dragonfly", answer: "bat" },
+        { items: "cheese, butter, yogurt, bread", answer: "bread" },
+        { items: "inch, meter, pound, kilometer", answer: "pound" },
+        { items: "couch, bed, lamp, chair", answer: "lamp" },
+        { items: "whisper, shout, talk, listen", answer: "listen" },
+        { items: "oak, pine, maple, rose", answer: "rose" },
+        { items: "spaghetti, lasagna, ravioli, taco", answer: "taco" }
     ];
     const set = sets[Math.floor(Math.random() * sets.length)];
     return {
@@ -536,8 +586,8 @@ function generateOddOneOutTask() {
     };
 }
 
-function generateVerificationTask() {
-    const code = Math.floor(Math.random() * 9000) + 1000;
+function generateVerificationTask() {                        // Generate verification code task
+    const code = Math.floor(Math.random() * 9000) + 1000;            // Choose a random number
     return {
         title: "Verification",
         desc: `Please verify your account. Use this code: ${code}`,
@@ -548,13 +598,13 @@ function generateVerificationTask() {
     };
 }
 
-function chooseRandomTask() {
+function chooseRandomTask() {                                                                            // Generate a random task
     let chances = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
     let lockChance = chances[Math.floor(Math.random() * chances.length)];
     let chosenTask = -1;
     let randInd;
 
-    if (lockChance <= lockProbability) {
+    if (lockChance <= lockProbability) {        // Based on the probability, determine whether or not to choose a timer lock task
         randInd = Math.floor(Math.random() * 2);
         
         if (randInd === 1) {
@@ -566,7 +616,7 @@ function chooseRandomTask() {
         randInd = Math.floor(Math.random() * taskPool.length);
         
         // Sequential 1
-        if (prevTaskInd === 4) {
+        if (prevTaskInd === 4) {                    // Preserve sequential task sequences
             randInd = 5;
         } else if (prevTaskInd === 5) {
             randInd = 6;
@@ -592,13 +642,13 @@ function chooseRandomTask() {
     prevTaskInd = randInd;
    
 
-    if (typeof chosenTask === "function") {
+    if (typeof chosenTask === "function") {            // If a task is a function, interpret it differently.
         chosenTask = chosenTask();
     }
     
     currentTaskNum++; 
 
-    createTask(
+    createTask(                                            // Create the dang thing
         `${timesTurned}.${currentTaskNum}`,
         chosenTask.title,
         chosenTask.desc,
@@ -611,7 +661,7 @@ function chooseRandomTask() {
     )
 }
 
-function startGame() {
+function startGame() {                                      // Start the game
     document.body.style.background = "linear-gradient(90deg,rgba(237, 109, 109, 1) 0%, rgba(237, 161, 126, 1) 50%, rgba(247, 205, 114, 1) 100%)";
     for (let i = 0; i <= maxTasks; i++)
         chooseRandomTask();
@@ -621,7 +671,7 @@ function startGame() {
 
 
 
-document.addEventListener("bombModeStart", () => {
+document.addEventListener("bombModeStart", () => {            // Initialize game (on restart)
     document.body.classList.add("bomb-mode");
     modal.classList.add("hidden");
     timesTurned = 0;
@@ -629,29 +679,29 @@ document.addEventListener("bombModeStart", () => {
     startGame();
 });
 
-document.addEventListener("dialTurned", () => {
+document.addEventListener("dialTurned", () => {            // Subtract points if the dial is turned
     timesTurned++;
     currentTaskNum = 0;
     score -= 50;
 });
 
-document.addEventListener("endGame", () => {
+document.addEventListener("endGame", () => {                // End the game, and show final score + dial turn count
     gameLoop = false;
     modal.classList.remove("hidden");
     finalScoreText.textContent = `Your final score is ${score} points.`
     finalStatsText.textContent = (`You completed ${totalTaskNum} task${totalTaskNum === 1 ? "" : "s"} and spun the dial ${timesTurned} time${timesTurned === 1 ? "" : "s"}.`)
     
-    while (todoColumn.lastElementChild && todoColumn.lastElementChild.tagName !== "HR") {
+    while (todoColumn.lastElementChild && todoColumn.lastElementChild.tagName !== "HR") {                // Clear todo column
         todoColumn.removeChild(todoColumn.lastElementChild);
     }
 
-    while (lockColumn.lastElementChild && lockColumn.lastElementChild.tagName !== "HR") {
+    while (lockColumn.lastElementChild && lockColumn.lastElementChild.tagName !== "HR") {                // Clear timer lock column
         lockColumn.removeChild(lockColumn.lastElementChild);
     }
 });
 
 
-restartButton.addEventListener("click", () => {
+restartButton.addEventListener("click", () => {            // Restart the game if the user decides to
     score = 0;
     lockProbability = 5;
     timesTurned = 0;
