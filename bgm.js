@@ -2,7 +2,7 @@ const am4 = new Audio('music/am4.mp3');                            // Importing 
 const balcony = new Audio('music/Balcony.mp3');
 const daylight_over = new Audio('music/DaylightOver.mp3');
 const downtown = new Audio('music/Downtown.mp3');
-const explosionsfx = new Audio("explosion.mp3")
+const explosionsfx = new Audio("sfx/explosion.mp3")
 
 const bgmSongs = [am4, balcony, daylight_over, downtown];         // Putting all bgm in a list to randomly choose from
 let currentSong = null;
