@@ -2,7 +2,7 @@ const todoColumn = document.querySelectorAll('.column')[0]; // Selects the FIRST
 const completedColumn = document.querySelectorAll('.column')[2]; // Selects the THIRD element with class "column"
 const modal2 = document.querySelector(".modal2");
 const startButton = document.getElementById("startButton");
-const lofiRain = new Audio("music/lofiRain.mp3");
+const lofiRain = new Audio("music/lofiRain.mp3");                // Import BGM
 
 let vol = 0.9;
 lofiRain.volume = vol;
@@ -10,7 +10,7 @@ lofiRain.volume = vol;
 
 
 
-function complete(event) {
+function complete(event) {                // Everything that should be done when a task is completed
     const btn = event.target;
     const task = btn.closest(".task-card");
     const span = task.querySelector("span")
@@ -20,13 +20,13 @@ function complete(event) {
         const inp = task.querySelector("input");
 
         if (inp.value.toLowerCase() === inp.dataset.answer) {
-            completedColumn.appendChild(task.querySelector("span"));
+            completedColumn.appendChild(task.querySelector("span"));                // Move the ID to the completed column
             
-            span.classList.remove("fade-in-slide-right");
+            span.classList.remove("fade-in-slide-right");            // Make the ID transition into the completed column smoothly
             void span.offsetWidth;
             span.classList.add("fade-in-slide-right");
 
-            task.classList.remove("fade-out-slide-right");
+            task.classList.remove("fade-out-slide-right");            // Make the task card transition out of its respective column smoothly 
             void task.offsetWidth;
             task.classList.add("fade-out-slide-right");
 
@@ -37,7 +37,7 @@ function complete(event) {
             task.remove();
 
             setTimeout(() => {
-                nextTask(taskID);
+                nextTask(taskID);            // Generate next task
             }, 500);
         }
     } else {
@@ -65,7 +65,7 @@ function complete(event) {
 
 function nextTask(id) {
     if (id === "t.1") {
-        lofiRain.play();
+        lofiRain.play();            // Start the music once first task is completed (stupid web browsers not letting me play on load D:<)
         createTask(
             "t.2",
             "Time Management",
@@ -100,9 +100,9 @@ function nextTask(id) {
             "bombMODE!"
         );
     } else {
-        modal2.classList.remove("hidden");
+        modal2.classList.remove("hidden");                // Make the modal visible once all tutorial tasks are completed
         
-        const fadeInterval = setInterval(() => {
+        const fadeInterval = setInterval(() => {        // Make the music fade out
             vol = Math.max(0, vol - 0.05);
 
             lofiRain.volume = vol;
@@ -119,21 +119,21 @@ function nextTask(id) {
 
 
 
-function createTask(id, title, desc, btn, txt, reqInp) {
+function createTask(id, title, desc, btn, txt, reqInp) {            // Everything to be done once a task is completed
     const task = document.createElement("div");
     const ident = document.createElement("span");
     const head = document.createElement("h3");
     const description = document.createElement("p");
     
-    ident.textContent = id;
+    ident.textContent = id;                    // Put all the text into their corresponding elements
     head.textContent = title;
     description.textContent = desc;
     
-    task.classList.add("task-card");
+    task.classList.add("task-card");                // Make the task a real task
     task.dataset.taskId = id;
-    task.append(ident, head, description);
+    task.append(ident, head, description);            // Give the task its properties
     
-    if (typeof btn !== "undefined") {
+    if (typeof btn !== "undefined") {                        // This is for making a button
         const button = document.createElement("button");
         const btntxt = document.createElement("p");
 
@@ -143,29 +143,29 @@ function createTask(id, title, desc, btn, txt, reqInp) {
         button.classList.add("completeTask");
         task.append(button);
         
-    } else {
+    } else {                                                // This is for making text input
         const inp = document.createElement("input");
         const submit = document.createElement("button");
         
         inp.placeholder = txt;
         submit.textContent = "";
-        inp.dataset.answer = reqInp.toLowerCase();
+        inp.dataset.answer = reqInp.toLowerCase();            // Give the task a unique answer
         submit.classList.add("completeTask");
         submit.style.backgroundColor = "#f2f2f2";
         submit.style.border = "0px";
 
         task.append(inp, submit);
 
-        inp.addEventListener("keydown", (event) => {
+        inp.addEventListener("keydown", (event) => {                // Give the text box functionality of hiting enter
             if (event.key === "Enter") {
                 submit.click();
             }
         });
     }
     
-    todoColumn.append(task)
+    todoColumn.append(task)                    // Add the task to the to-do column
     
-    task.classList.remove("fade-slide-up");
+    task.classList.remove("fade-slide-up");            // Slide the task up into the column (polish)
     void task.offsetWidth;
     task.classList.add("fade-slide-up");
 
@@ -188,7 +188,7 @@ createTask(
 
 
 
-startButton.addEventListener("click", () => {
+startButton.addEventListener("click", () => {                    // Start bomb mode
     document.dispatchEvent(new Event("bombModeStart"));
     modal2.classList.add("hidden");
 });
