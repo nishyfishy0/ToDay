@@ -17,7 +17,7 @@ Gain as many points as you can before you run out of time.<br>
 Good luck, you'll need it.
 
 ## CodeJam Information
-This project was made over the course of 2 weeks, with AI as a coding assistant. Everything is made by me, with the exception of the words for the Random Word, Reverse Word, and Odd One Out tasks being given by Gemini. This game is endless, and is my first major web project, with the most complex thing I'd made in HTML/CSS/JS before this being Tic-Tac-Toe. As a result, I've learned a lot throughout this project. If you decide to download this repo, it runs right out of the box.
+This project was made over the course of 2 weeks, with AI as a coding assistant. Everything is made by me, with the exception of the words for the Random Word, Reverse Word, and Odd One Out tasks being given by Gemini. This game is endless, and is my first major web project, with the most complex thing I'd made in HTML/CSS/JS before this being Tic-Tac-Toe. As a result, I've learned a lot throughout this project. If you decide to download this repo, you must have a local server. A good one is the "Live Server" extension in VS Code.
 
 ### Credits
 * Music — [Lin Wolinski (Lo-Bit Record)](https://lobitrecord.com/en/music/)
